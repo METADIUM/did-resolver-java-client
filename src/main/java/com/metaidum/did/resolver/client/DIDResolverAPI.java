@@ -26,14 +26,25 @@ public class DIDResolverAPI {
 		bDebug = debug;
 	}
 	
-	
     private final OkHttpClient okHttpClient;
+    
+    private static DIDResolverAPI instance;
+    
+    /**
+     * Get singleton instance
+     * @return
+     */
+    public static synchronized DIDResolverAPI getInstance() {
+    	if (instance == null) {
+    		instance = new DIDResolverAPI();
+    	}
+    	return instance;
+    }
 
     /**
      * Create did resolver API
-     * @param testnet if true, testnet. if false, mainnet
      */
-    public DIDResolverAPI(boolean testnet) {
+    private DIDResolverAPI() {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         if (bDebug) {
 	        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -45,12 +56,12 @@ public class DIDResolverAPI {
     }
     
     /**
-     * Creatae did resolver API. Default testnet
+     * Request did document.
+     * reponse raw data
+     * @param did did to search
+     * @return response
+     * @throws IOException
      */
-    public DIDResolverAPI() {
-    	this(false);
-    }
-    
     public DIDResolverResponse requestDocument(String did) throws IOException {
     	boolean testnet = did.startsWith("did:meta:testnet");
     	
@@ -67,10 +78,9 @@ public class DIDResolverAPI {
      * @param did to search. did:meta:(testnet|mainnet):{meta_id}
      * @return Did document. if not exists did or occur io error, return null
      */
-    public static DidDocument getDocument(String did) {
-    	boolean testnet = did.startsWith("did:meta:testnet");
+    public DidDocument getDocument(String did) {
     	try {
-    		return new DIDResolverAPI(testnet).requestDocument(did).getDidDocument();
+    		return requestDocument(did).getDidDocument();
     	}
     	catch (IOException e) {
     		// 통신에러

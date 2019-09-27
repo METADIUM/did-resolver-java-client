@@ -20,29 +20,29 @@ public class TestDidResolverClient {
 	
 	@Test
 	public void requestResolver() {
-		DidDocument document = DIDResolverAPI.getDocument(TEST_DID);
+		DidDocument document = DIDResolverAPI.getInstance().getDocument(TEST_DID);
 		assertNotNull(document);
 		
 		// invalid did
-		document = DIDResolverAPI.getDocument("did:meta:testnet000000000000000000000000000000000000000000000000000000000000054b");
+		document = DIDResolverAPI.getInstance().getDocument("did:meta:testnet000000000000000000000000000000000000000000000000000000000000054b");
 		assertNull(document);
-		document = DIDResolverAPI.getDocument("did:meta:testnet:00000000000000000000000000000000000000000000000000000000000054b");
+		document = DIDResolverAPI.getInstance().getDocument("did:meta:testnet:00000000000000000000000000000000000000000000000000000000000054b");
 		assertNull(document);
-		document = DIDResolverAPI.getDocument("did:met:000000000000000000000000000000000000000000000000000000000000054b");
+		document = DIDResolverAPI.getInstance().getDocument("did:met:000000000000000000000000000000000000000000000000000000000000054b");
 		assertNull(document);
-		document = DIDResolverAPI.getDocument("000000000000000000000000000000000000000000000000000000000000054b");
+		document = DIDResolverAPI.getInstance().getDocument("000000000000000000000000000000000000000000000000000000000000054b");
 		assertNull(document);
-		document = DIDResolverAPI.getDocument("did:meta:testnet:0x000000000000000000000000000000000000000000000000000000000000054b");
+		document = DIDResolverAPI.getInstance().getDocument("did:meta:testnet:0x000000000000000000000000000000000000000000000000000000000000054b");
 		assertNull(document);
 
 		// not found
-		document = DIDResolverAPI.getDocument("did:meta:testnet:000000000000000000000000000000000000000000000000000000000001154b");
+		document = DIDResolverAPI.getInstance().getDocument("did:meta:testnet:000000000000000000000000000000000000000000000000000000000001154b");
 		assertNull(document);
 	}
 	
 	@Test
 	public void didDocument() {
-		DidDocument document = DIDResolverAPI.getDocument(TEST_DID);
+		DidDocument document = DIDResolverAPI.getInstance().getDocument(TEST_DID);
 		assertNotNull(document);
 
 		// require
