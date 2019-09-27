@@ -19,7 +19,7 @@ Add dependency
 <dependency>
     <groupId>com.github.METADIUM</groupId>
     <artifactId>did-resolver-java-client</artifactId>
-    <version>0.1</version>
+    <version>0.1.1</version>
 </dependency>
 ```
 ### Gradle
@@ -36,7 +36,7 @@ Add dependency
 
 ```gradle
 dependencies {
-    implementation 'com.github.METADIUM:did-resolver-java-client:0.1'
+    implementation 'com.github.METADIUM:did-resolver-java-client:0.1.1'
 }
 ```
 
@@ -45,12 +45,12 @@ dependencies {
 
 ### Get DID Document
 ```java
-DIDocument didDocument = DIDResolverAPI.getDocument("did:meta:testnet000000000000000000000000000000000000000000000000000000000000054b");
+DIDocument didDocument = DIDResolverAPI.getInstance().getDocument("did:meta:testnet000000000000000000000000000000000000000000000000000000000000054b");
 ```
 
 ### Get public key in document
 ```java
-DIDocument didDocument = DIDResolverAPI.getDocument("did:meta:testnet000000000000000000000000000000000000000000000000000000000000054b");
+DIDocument didDocument = DIDResolverAPI.getInstance().getDocument("did:meta:testnet000000000000000000000000000000000000000000000000000000000000054b");
 
 // retrieve public key
 for (PublicKey publicKey : didDocument.getPublicKey()) {
