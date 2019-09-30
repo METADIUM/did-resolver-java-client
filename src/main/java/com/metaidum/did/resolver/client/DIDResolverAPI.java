@@ -17,8 +17,8 @@ import okhttp3.logging.HttpLoggingInterceptor;
  *
  */
 public class DIDResolverAPI {
-	private final static String TESTNET_RESOLVER_URL = "https://testnetresolver.metadium.com/1.0/";
-	private final static String MAINNET_RESOLVER_URL = "https://resolver.metadium.com/1.0/";
+	private final static String DEFAULT_TESTNET_RESOLVER_URL = "https://testnetresolver.metadium.com/1.0/";
+	private final static String MADEFAULT_INNET_RESOLVER_URL = "https://resolver.metadium.com/1.0/";
 	
 	private static boolean bDebug = false;
 	
@@ -30,6 +30,8 @@ public class DIDResolverAPI {
     
     private static DIDResolverAPI instance;
     
+    private String resovlerUrl;
+    
     /**
      * Get singleton instance
      * @return
@@ -39,6 +41,14 @@ public class DIDResolverAPI {
     		instance = new DIDResolverAPI();
     	}
     	return instance;
+    }
+    
+    /**
+     * Set resovler url to request
+     * @param resovlerUrl
+     */
+    public void setResolverUrl(String resovlerUrl) {
+    	this.resovlerUrl = resovlerUrl;
     }
 
     /**
@@ -63,10 +73,10 @@ public class DIDResolverAPI {
      * @throws IOException
      */
     public DIDResolverResponse requestDocument(String did) throws IOException {
-    	boolean testnet = did.startsWith("did:meta:testnet");
+    	String url = resovlerUrl != null ? resovlerUrl : (did.startsWith("did:meta:testnet") ? DEFAULT_TESTNET_RESOLVER_URL : MADEFAULT_INNET_RESOLVER_URL);
     	
     	Request request = new Request.Builder()
-    			.url((testnet ? TESTNET_RESOLVER_URL : MAINNET_RESOLVER_URL)+"identifiers/"+did)
+    			.url(url+"identifiers/"+did)
     			.build();
     	
 		Response response = okHttpClient.newCall(request).execute();

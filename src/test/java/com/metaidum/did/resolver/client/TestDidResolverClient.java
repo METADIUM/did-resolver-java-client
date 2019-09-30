@@ -64,4 +64,15 @@ public class TestDidResolverClient {
 		}
 		assertEquals(2, document.getPublicKeyOfAuthentication().size());
 	}
+	
+	@Test
+	public void changeResolverUrl() {
+		DIDResolverAPI.getInstance().setResolverUrl("https://naver.com");
+		DidDocument document = DIDResolverAPI.getInstance().getDocument(TEST_DID);
+		assertNull(document);
+		DIDResolverAPI.getInstance().setResolverUrl(null);
+		document = DIDResolverAPI.getInstance().getDocument(TEST_DID);
+		assertNotNull(document);
+		
+	}
 }
