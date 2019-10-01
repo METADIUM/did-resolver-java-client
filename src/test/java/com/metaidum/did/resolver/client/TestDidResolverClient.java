@@ -6,9 +6,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey;
 import org.junit.Test;
 
 import com.metaidum.did.resolver.client.document.DidDocument;
+import com.metaidum.did.resolver.client.document.PublicKey;
 
 public class TestDidResolverClient {
 	private static final String TEST_DID = "did:meta:testnet:000000000000000000000000000000000000000000000000000000000000054b";
@@ -63,6 +65,17 @@ public class TestDidResolverClient {
 			assertNotNull(document.getPublicKey(kid));
 		}
 		assertEquals(2, document.getPublicKeyOfAuthentication().size());
+	}
+	
+	@Test
+	public void pubicKey() {
+		DidDocument document = DIDResolverAPI.getInstance().getDocument(TEST_DID);
+		assertNotNull(document);
+
+		PublicKey pk = document.getPublicKey("did:meta:testnet:000000000000000000000000000000000000000000000000000000000000054b#MetaManagementKey#cfd31afff25b2260ea15ef59f2d5d7dfe8c13511");
+		java.security.PublicKey publicKey = pk.getPublicKey();
+		assertNotNull(publicKey);
+		assertTrue(publicKey instanceof BCECPublicKey);
 	}
 	
 	@Test

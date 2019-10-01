@@ -2,6 +2,8 @@ package com.metaidum.did.resolver.client.document;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.metaidum.did.resolver.client.document.key.EcdsaSecp256k1VerificationKey2019;
+import com.metaidum.did.resolver.client.document.key.PublicKeyType;
 
 /**
  * Public key Object in did document
@@ -9,6 +11,21 @@ import com.google.gson.annotations.SerializedName;
  *
  */
 public class PublicKey {
+	enum Type {
+		EcdsaSecp256k1VerificationKey2019(new EcdsaSecp256k1VerificationKey2019())
+		;
+		
+		private PublicKeyType<?> keyType;
+		
+		private Type(PublicKeyType<?> keyType) {
+			this.keyType = keyType;
+		}
+		
+		public PublicKeyType<?> getKeyType() {
+			return keyType;
+		}
+	}
+	
     @SerializedName("id")
     @Expose
     private String id;
@@ -40,6 +57,30 @@ public class PublicKey {
     public void setType(String type) {
         this.type = type;
     }
+    
+    /**
+     * Get decoded public key from publickeyhex
+     * @return decoded public key
+     */
+    public java.security.PublicKey getPublicKey() {
+    	if (publicKeyHex == null) {
+    		return null;
+    	}
+    	
+    	PublicKeyType<?> publicKeyType; 
+    	try {
+    		publicKeyType = Type.valueOf(type).getKeyType();
+    	}
+    	catch (IllegalArgumentException e) {
+    		return null;
+    	}
+
+    	if (publicKeyType == null) {
+    		return null;
+    	}
+    	
+    	return publicKeyType.getPublicKey(publicKeyHex);
+    }
 
     public String getController() {
         return controller;
@@ -64,4 +105,5 @@ public class PublicKey {
     public void setPublicKeyHash(String publicKeyHash) {
         this.publicKeyHash = publicKeyHash;
     }
+    
 }
