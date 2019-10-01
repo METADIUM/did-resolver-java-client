@@ -4,7 +4,7 @@
 
   <groupId>com.metaidum</groupId>
   <artifactId>did-resolver-java-client</artifactId>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
   <packaging>jar</packaging>
 
   <name>did-resolver</name>
@@ -41,7 +41,12 @@
       <artifactId>gson</artifactId>
       <version>2.8.5</version>
     </dependency>
-	
+    
+    <dependency>
+	  <groupId>org.bouncycastle</groupId>
+      <artifactId>bcprov-jdk15on</artifactId>
+      <version>[1.52,)</version>
+    </dependency>
 
   </dependencies>
   <scm>
