@@ -69,14 +69,16 @@ public class DIDResolverAPI {
      * Request did document.
      * reponse raw data
      * @param did did to search
+     * @param noCache if true, did resolver does not cache did document
      * @return response
      * @throws IOException
      */
-    public DIDResolverResponse requestDocument(String did) throws IOException {
+    public DIDResolverResponse requestDocument(String did, boolean noCache) throws IOException {
     	String url = resovlerUrl != null ? resovlerUrl : (did.startsWith("did:meta:testnet") ? DEFAULT_TESTNET_RESOLVER_URL : MADEFAULT_INNET_RESOLVER_URL);
     	
     	Request request = new Request.Builder()
     			.url(url+"identifiers/"+did)
+    			.addHeader("no-cache", "true")
     			.build();
     	
 		Response response = okHttpClient.newCall(request).execute();
@@ -86,15 +88,26 @@ public class DIDResolverAPI {
     /**
      * Request did document
      * @param did to search. did:meta:(testnet|mainnet):{meta_id}
+     * @param noCache if true, did resolver does not cache did document
      * @return Did document. if not exists did or occur io error, return null
      */
-    public DidDocument getDocument(String did) {
+    public DidDocument getDocument(String did, boolean noCache) {
     	try {
-    		return requestDocument(did).getDidDocument();
+    		return requestDocument(did, noCache).getDidDocument();
     	}
     	catch (IOException e) {
     		// 통신에러
     		return null;
     	}
+    }
+    
+    
+    /**
+     * Request did document. no-cache is false
+     * @param did to search. did:meta:(testnet|mainnet):{meta_id}
+     * @return Did document. if not exists did or occur io error, return null
+     */
+    public DidDocument getDocument(String did) {
+    	return getDocument(did, false);
     }
 }
