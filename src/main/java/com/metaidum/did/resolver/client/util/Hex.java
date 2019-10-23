@@ -1,5 +1,7 @@
 package com.metaidum.did.resolver.client.util;
 
+import java.math.BigInteger;
+
 public class Hex {
     public static byte[] hexStringToByteArray(String input) {
         int len = input.length();
@@ -24,5 +26,22 @@ public class Hex {
                     + Character.digit(input.charAt(i + 1), 16));
         }
         return data;
+    }
+    
+    public static String toHexString(byte[] input) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < input.length; i++) {
+            stringBuilder.append(String.format("%02x", input[i] & 0xFF));
+        }
+        return stringBuilder.toString();
+    }
+    
+    public static String toHexStringZeroPadding(BigInteger num, int size) {
+    	StringBuilder s = new StringBuilder(num.toString(16));
+    	
+    	while (s.length() < size) {
+    		s.insert(0, '0');
+    	}
+    	return s.toString();
     }
 }
