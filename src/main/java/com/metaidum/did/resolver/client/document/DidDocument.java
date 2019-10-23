@@ -1,10 +1,15 @@
 package com.metaidum.did.resolver.client.document;
 
+import java.math.BigInteger;
+import java.security.SignatureException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.metaidum.did.resolver.client.crypto.Signature;
+import com.metaidum.did.resolver.client.util.Hex;
 
 /**
  * Did document class
@@ -111,8 +116,22 @@ public class DidDocument {
     		address = address.substring(2);
     	}
         for (PublicKey key : publicKeyVoList) {
-            if (key.getId().endsWith(address) && key.getPublicKeyHash() != null && key.getPublicKeyHash().equals(address)) {
-            	return true;
+            if (key.getId().endsWith(address)) {
+            	// check publicKeyHash(is address)
+            	if (key.getPublicKeyHash() != null && key.getPublicKeyHash().equals(address)) {
+            		return true;
+            	}
+            	
+            	// check publicKeyHex(is encoded public key)
+            	if (key.getPublicKeyHex() != null) {
+            		// non-compressed public key
+            		byte[] publicKeyBytes = Hex.hexStringToByteArray(key.getPublicKeyHex());
+                    BigInteger publicKeyValue = new BigInteger(1, Arrays.copyOfRange(publicKeyBytes, 1, publicKeyBytes.length));
+                    if (Signature.toAddress(publicKeyValue).equals(address)) {
+                    	return true;
+                    }
+
+            	}
             }
         }
         return false;
@@ -133,5 +152,16 @@ public class DidDocument {
 	    	}
     	}
     	return ret;
+    }
+    
+    /**
+     * verify signature and check if address is owned by did
+     * @param message used when signing
+     * @param signature signature
+     * @return if verified and is address of did owner, return true 
+     * @throws SignatureException
+     */
+    public boolean hasRecoverAddressFromSignature(byte[] message, String signature) throws SignatureException {
+    	return hasPublicKeyWithAddress(Signature.addressFromSignature(message, signature));
     }
 }
