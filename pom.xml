@@ -47,6 +47,14 @@
       <artifactId>bcprov-jdk15on</artifactId>
       <version>[1.52,)</version>
     </dependency>
+    
+    <dependency>
+	  <groupId>org.web3j</groupId>
+      <artifactId>core</artifactId>
+      <version>[4.2.0,)</version>
+      <scope>test</scope>
+    </dependency>
+    
 
   </dependencies>
   <scm>

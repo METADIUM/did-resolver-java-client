@@ -6,14 +6,23 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.security.SignatureException;
+
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey;
 import org.junit.Test;
+import org.web3j.crypto.ECKeyPair;
+import org.web3j.crypto.Sign;
+import org.web3j.utils.Numeric;
 
 import com.metaidum.did.resolver.client.document.DidDocument;
 import com.metaidum.did.resolver.client.document.PublicKey;
 
 public class TestDidResolverClient {
 	private static final String TEST_DID = "did:meta:testnet:000000000000000000000000000000000000000000000000000000000000054b";
+	private static final String TEST_PRIVATE_OF_DID = "86975dca6a36062768cf4b648b5b3f712caa2d1d61fa42520624a8e574788822";
 	
 	static {
 		DIDResolverAPI.setDebug(true);
@@ -86,6 +95,23 @@ public class TestDidResolverClient {
 		DIDResolverAPI.getInstance().setResolverUrl(null);
 		document = DIDResolverAPI.getInstance().getDocument(TEST_DID);
 		assertNotNull(document);
+	}
+	
+	@Test
+	public void signatureTest() throws SignatureException {
+		// signing
+		byte[] message = "test message".getBytes(StandardCharsets.UTF_8);
+		BigInteger privateKey = Numeric.toBigIntNoPrefix(TEST_PRIVATE_OF_DID);
+		Sign.SignatureData signatureData = Sign.signMessage(message, ECKeyPair.create(privateKey));
+		
+		ByteBuffer buffer = ByteBuffer.allocate(65);
+        buffer.put(signatureData.getR());
+        buffer.put(signatureData.getS());
+        buffer.put(signatureData.getV());
+        String signature = Numeric.toHexString(buffer.array());
+		
+		DidDocument document = DIDResolverAPI.getInstance().getDocument(TEST_DID);
+		assertTrue(document.hasRecoverAddressFromSignature(message, signature));
 		
 	}
 }
