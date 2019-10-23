@@ -19,7 +19,7 @@ Add dependency
 <dependency>
     <groupId>com.github.METADIUM</groupId>
     <artifactId>did-resolver-java-client</artifactId>
-    <version>0.1.2</version>
+    <version>0.1.3</version>
 </dependency>
 ```
 ### Gradle
@@ -36,7 +36,7 @@ Add dependency
 
 ```gradle
 dependencies {
-    implementation 'com.github.METADIUM:did-resolver-java-client:0.1.2'
+    implementation 'com.github.METADIUM:did-resolver-java-client:0.1.3'
 }
 ```
 
@@ -63,6 +63,11 @@ document.getPublicKey(keyId);
 
 // Get decoded public key
 ECPublicKey publicKey = (ECPublicKey)document.getPublicKey(keyId).getPublicKey();
+
+// Check public key from signature
+byte[] message = (to sign message);
+String signature = (hex string of V+R+S to sign secp256k1);
+boolean bContainsPublicKey = document.hasRecoverAddressFromSignature(message, signature);
 ```
 
 
