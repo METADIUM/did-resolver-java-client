@@ -45,12 +45,12 @@ dependencies {
 
 ### Get DID Document
 ```java
-DIDocument didDocument = DIDResolverAPI.getInstance().getDocument("did:meta:testnet000000000000000000000000000000000000000000000000000000000000054b");
+DidDocument didDocument = DIDResolverAPI.getInstance().getDocument("did:meta:testnet000000000000000000000000000000000000000000000000000000000000054b");
 ```
 
 ### Get public key in document
 ```java
-DIDocument didDocument = DIDResolverAPI.getInstance().getDocument("did:meta:testnet000000000000000000000000000000000000000000000000000000000000054b");
+DidDocument didDocument = DIDResolverAPI.getInstance().getDocument("did:meta:testnet000000000000000000000000000000000000000000000000000000000000054b");
 
 // retrieve public key
 for (PublicKey publicKey : didDocument.getPublicKey()) {
