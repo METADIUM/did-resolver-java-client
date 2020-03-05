@@ -56,12 +56,12 @@ Logging use slf4j.
 
 ### Get DID Document
 ```java
-DidDocument didDocument = DIDResolverAPI.getInstance().getDocument("did:meta:testnet000000000000000000000000000000000000000000000000000000000000054b");
+Didocument didDocument = DIDResolverAPI.getInstance().getDocument("did:meta:testnet:000000000000000000000000000000000000000000000000000000000000054b");
 ```
 
 ### Get public key in document
 ```java
-DidDocument didDocument = DIDResolverAPI.getInstance().getDocument("did:meta:testnet000000000000000000000000000000000000000000000000000000000000054b");
+Didocument didDocument = DIDResolverAPI.getInstance().getDocument("did:meta:testnet:000000000000000000000000000000000000000000000000000000000000054b");
 
 // retrieve public key
 for (PublicKey publicKey : didDocument.getPublicKey()) {
