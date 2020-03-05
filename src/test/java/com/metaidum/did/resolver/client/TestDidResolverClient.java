@@ -25,9 +25,8 @@ public class TestDidResolverClient {
 	private static final String TEST_PRIVATE_OF_DID = "86975dca6a36062768cf4b648b5b3f712caa2d1d61fa42520624a8e574788822";
 	
 	static {
-		DIDResolverAPI.setDebug(true);
+		System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "DEBUG");
 	}
-	
 	
 	@Test
 	public void requestResolver() {

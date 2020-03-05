@@ -8,7 +8,9 @@ import com.metaidum.did.resolver.client.document.ResolverMetadata;
 
 /**
  * DID resolver response data
- * @author mansud
+ * <p>
+ * 
+ * @author ybjeon
  *
  */
 public class DIDResolverResponse {
@@ -30,7 +32,6 @@ public class DIDResolverResponse {
     @SerializedName("message")
     @Expose
     private String message;
-
 
 
     public Object getRedirect() {
@@ -80,4 +81,6 @@ public class DIDResolverResponse {
     public void setMessage(String message) {
         this.message = message;
     }
+    
+    
 }

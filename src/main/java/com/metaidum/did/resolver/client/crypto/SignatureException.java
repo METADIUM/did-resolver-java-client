@@ -6,6 +6,7 @@ package com.metaidum.did.resolver.client.crypto;
  *
  */
 public class SignatureException extends Exception {
+	private static final long serialVersionUID = 2605438053670691386L;
 
 	public SignatureException() {
 		super();

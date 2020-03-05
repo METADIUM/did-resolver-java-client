@@ -2,29 +2,31 @@ package com.metaidum.did.resolver.client;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.Gson;
 import com.metaidum.did.resolver.client.document.DidDocument;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.logging.HttpLoggingInterceptor;
 
 
 /**
- * DID Resolver API
- * @author mansud
+ * DID Resolver API.
+ * <p>
+ * Only provided read Did document in Metadium.
+ * <p>
+ * 
+ * @author ybjeon
  *
  */
 public class DIDResolverAPI {
 	private final static String DEFAULT_TESTNET_RESOLVER_URL = "https://testnetresolver.metadium.com/1.0/";
-	private final static String MADEFAULT_INNET_RESOLVER_URL = "https://resolver.metadium.com/1.0/";
+	private final static String DEFAULT_MAINNET_RESOLVER_URL = "https://resolver.metadium.com/1.0/";
 	
-	private static boolean bDebug = false;
-	
-	public static void setDebug(boolean debug) {
-		bDebug = debug;
-	}
+	private static Logger logger = LoggerFactory.getLogger(DIDResolverAPI.class);
 	
     private final OkHttpClient okHttpClient;
     
@@ -45,7 +47,7 @@ public class DIDResolverAPI {
     
     /**
      * Set resovler url to request
-     * @param resovlerUrl
+     * @param resovlerUrl url of did resovler to change
      */
     public void setResolverUrl(String resovlerUrl) {
     	this.resovlerUrl = resovlerUrl;
@@ -56,12 +58,6 @@ public class DIDResolverAPI {
      */
     private DIDResolverAPI() {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        if (bDebug) {
-	        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-	        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-	        httpClient.interceptors().add(logging);
-        }
-
         okHttpClient = httpClient.build();
     }
     
@@ -74,15 +70,21 @@ public class DIDResolverAPI {
      * @throws IOException
      */
     public DIDResolverResponse requestDocument(String did, boolean noCache) throws IOException {
-    	String url = resovlerUrl != null ? resovlerUrl : (did.startsWith("did:meta:testnet") ? DEFAULT_TESTNET_RESOLVER_URL : MADEFAULT_INNET_RESOLVER_URL);
+    	String url = resovlerUrl != null ? resovlerUrl : (did.startsWith("did:meta:testnet") ? DEFAULT_TESTNET_RESOLVER_URL : DEFAULT_MAINNET_RESOLVER_URL);
     	
+    	long time = System.currentTimeMillis();
     	Request request = new Request.Builder()
     			.url(url+"identifiers/"+did)
-    			.addHeader("no-cache", "true")
+    			.addHeader("no-cache", Boolean.toString(noCache))
     			.build();
     	
 		Response response = okHttpClient.newCall(request).execute();
-		return new Gson().fromJson(response.body().charStream(), DIDResolverResponse.class);
+		String responseString = response.body().string();
+		if (logger.isDebugEnabled()) {
+			logger.debug("GetDidDocument {}ms\n{}", (System.currentTimeMillis()-time), responseString);
+		}
+		
+		return new Gson().fromJson(responseString, DIDResolverResponse.class);
     }
     
     /**
@@ -96,6 +98,9 @@ public class DIDResolverAPI {
     		return requestDocument(did, noCache).getDidDocument();
     	}
     	catch (IOException e) {
+    		if (logger.isErrorEnabled()) {
+    			logger.error("GetDidDocument I/O error}", e);
+    		}
     		// 통신에러
     		return null;
     	}

@@ -1,7 +1,11 @@
 package com.metaidum.did.resolver.client.document;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.metaidum.did.resolver.client.DIDResolverAPI;
 import com.metaidum.did.resolver.client.document.key.EcdsaSecp256k1VerificationKey2019;
 import com.metaidum.did.resolver.client.document.key.PublicKeyType;
 
@@ -11,6 +15,8 @@ import com.metaidum.did.resolver.client.document.key.PublicKeyType;
  *
  */
 public class PublicKey {
+	private static Logger logger = LoggerFactory.getLogger(DIDResolverAPI.class);
+	
 	enum Type {
 		EcdsaSecp256k1VerificationKey2019(new EcdsaSecp256k1VerificationKey2019())
 		;
@@ -67,15 +73,17 @@ public class PublicKey {
     		return null;
     	}
     	
-    	PublicKeyType<?> publicKeyType; 
+    	PublicKeyType<?> publicKeyType = null; 
     	try {
     		publicKeyType = Type.valueOf(type).getKeyType();
     	}
     	catch (IllegalArgumentException e) {
-    		return null;
     	}
 
     	if (publicKeyType == null) {
+    		if (logger.isWarnEnabled()) {
+    			logger.warn("Unknown public key type: "+type);
+    		}
     		return null;
     	}
     	
