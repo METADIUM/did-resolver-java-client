@@ -49,7 +49,7 @@ Logging use slf4j.
 
 ```xml
 <!-- logback.xml -->
-<logger name="com.metadium.provider.sdk" level="DEBUG" additivity ="false">
+<logger name="com.metadium.did.resolver.client" level="DEBUG" additivity ="false">
 	<appender-ref ref="console" />
 </logger>
 ```
